@@ -24,7 +24,7 @@ class Embedding(Scene):
         # 1. Criar as colunas individualmente
         for palavra in frase_lista:
             txt = Tex(palavra, font_size=30)
-            pesos = [f"{random.uniform(0, 1):.2f}" for _ in range(6)] + ["\\vdots", f"{random.uniform(0, 1):.2f}"]
+            pesos = [f"{random.uniform(-1, 1):+.2f}" for _ in range(6)] + ["\\vdots", f"{random.uniform(-1, 1):+.2f}"]
             vetor = ColoredVector(values=pesos, colors=paleta, vertical=True, font_size=24)
             
             # Agrupa texto e vetor. O arrange coloca o vetor abaixo do centro do texto.
@@ -55,12 +55,24 @@ class Embedding(Scene):
         texto_chave = MathTex("d=512", font_size=24)
         texto_chave.rotate(90 * DEGREES)
         texto_chave.next_to(chave, LEFT, buff=0.2)
-        anotacao = VGroup(chave, texto_chave)
-        colunas.add(anotacao)
+
+
+        vocab = Brace(colunas, UP, buff=0.2)
+        vocab_text = MathTex("Vocab \\text{ size } \\approx 50k", font_size=30)
+        vocab_text.next_to(vocab, UP, buff=0.2)
+        vocab_annotation = VGroup(vocab, vocab_text)
+        colunas.add(vocab_annotation)
+
+        self.play(
+            GrowFromCenter(vocab),
+            GrowFromCenter(vocab_text), 
+            run_time=1.5
+        )
+        self.wait(0.5)
 
         self.play(
             GrowFromCenter(chave),
-            FadeIn(texto_chave, shift=UP*0.2), 
+            GrowFromCenter(texto_chave), 
             run_time=1.5
         )
         self.wait(3)
