@@ -76,3 +76,52 @@ class Embedding(Scene):
             run_time=1.5
         )
         self.wait(3)
+
+class Embedding2D(Scene):
+    def construct(self):
+        plane = NumberPlane(
+            x_range=[-7, 7, 1],
+            y_range=[-4, 4, 1],
+            background_line_style={
+                "stroke_color": BLUE_D,
+                "stroke_width": 2,
+                "stroke_opacity": 0.2 
+            }
+        )
+        
+        coord_manga = [2, 1, 0]
+        coord_comida = [2.1, 1.7, 0]
+        coord_camisa = [-3, 2, 0]
+        coord_fruta = [3, 1.2, 0]
+
+        def create_word_point(coord, label_text, color):
+            dot = Dot(plane.coords_to_point(*coord[:2]), color=color)
+            vec = Arrow(plane.get_origin(), dot.get_center(), buff=0, color=color, stroke_width=3)
+            label = Text(label_text, font_size=24).next_to(dot, UR, buff=0.1)
+            return VGroup(vec, dot, label)
+
+        manga = create_word_point(coord_manga, "manga", BLUE)
+        comida = create_word_point(coord_comida, "comida", PURE_CYAN)
+        camisa = create_word_point(coord_camisa, "camisa", RED)
+        fruta = create_word_point(coord_fruta, "fruta", WHITE)
+
+        self.play(Create(plane), run_time=1.5)
+        self.wait(0.5)
+
+        self.play(GrowArrow(manga[0]), FadeIn(manga[1:]))
+        self.wait(0.3)
+
+        self.play(GrowArrow(comida[0]), FadeIn(comida[1:]))
+
+        self.play(GrowArrow(fruta[0]), FadeIn(fruta[1:]))
+
+        
+        surround_circle = Circle(radius=0.9, color=YELLOW, stroke_width=2).move_to(manga[1])
+        self.play(Create(surround_circle))
+
+        self.wait(0.5)
+
+        
+        self.play(GrowArrow(camisa[0]), FadeIn(camisa[1:]))
+        
+        self.wait(3)
